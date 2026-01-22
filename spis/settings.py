@@ -5,8 +5,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-d#km88cxv%kijw$^1f89p12ps-jpgd6+!yt@x91tp3=y2l*-v*'
 
-DEBUG = True
-ALLOWED_HOSTS = []
+DEBUG = False
+
+ALLOWED_HOSTS = [
+    'student-proctor-system-4.onrender.com',
+    '.onrender.com',
+    '127.0.0.1',
+    'localhost'
+]
+
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
