@@ -1,0 +1,48 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div class="container mt-5" style="max-width: 700px;">
+  <div class="card shadow-lg border-0">
+    
+    <div class="card-header bg-primary text-white text-center py-3">
+      <h3 class="mb-0">💬 Help & Contact</h3>
+      <p class="mb-0">Have a question? Need assistance? We're here to help.</p>
+    </div>
+
+    <div class="card-body p-4">
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Your Name</label>
+          <input type="text" name="name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Email Address</label>
+          <input type="email" name="email" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Message</label>
+          <textarea name="message" class="form-control" rows="5" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2">
+          ✉️ Send Message
+        </button>
+      </form>
+
+    </div>
+
+    <div class="card-footer bg-light text-center">
+      <p class="text-muted mb-0">
+        We respond within <strong>24 hours</strong>.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

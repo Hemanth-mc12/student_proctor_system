@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+
+  <!-- Dynamic Title Based on User Role -->
+  <div class="card shadow border-0">
+    <div class="card-header bg-primary text-white">
+      {% if role == "proctor" %}
+        <h3 class="mb-0">📢 Broadcast Messages (For Proctor)</h3>
+      {% else %}
+        <h3 class="mb-0">📢 Broadcast Messages (For Student)</h3>
+      {% endif %}
+    </div>
+
+    <div class="card-body">
+
+      {% if broadcasts %}
+        {% for b in broadcasts %}
+          <div class="alert alert-info shadow-sm mb-3">
+            <strong>{{ b.sender.username }}</strong><br>
+            {{ b.content }}<br>
+            <small class="text-muted">{{ b.timestamp|date:"d M Y h:i A" }}</small>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-muted text-center">No broadcast messages available.</p>
+      {% endif %}
+
+    </div>
+  </div>
+
+  <!-- Dynamic Back Button -->
+  {% if role == "proctor" %}
+    <a href="{% url 'proctor_dashboard' %}" class="btn btn-secondary mt-3">⬅ Back to Proctor Dashboard</a>
+  {% else %}
+    <a href="{% url 'student_dashboard' %}" class="btn btn-secondary mt-3">⬅ Back to Student Dashboard</a>
+  {% endif %}
+
+</div>
+
+{% endblock %}

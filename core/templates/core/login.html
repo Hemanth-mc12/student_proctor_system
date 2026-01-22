@@ -1,0 +1,155 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<style>
+  /* === LOGIN PAGE CUSTOM CSS === */
+  body {
+    background: linear-gradient(135deg, #e3f2fd, #f8f9fa);
+    min-height: 100vh;
+  }
+
+  .login-container {
+    max-width: 420px;
+    margin: 50px auto;
+    animation: fadeIn 0.8s ease-in-out;
+  }
+
+  .login-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+
+  .login-header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .login-header h4 {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .login-body {
+    background-color: #ffffff;
+    padding: 30px;
+  }
+
+  .form-label {
+    font-weight: 500;
+  }
+
+  .form-control {
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    transition: 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #0069d9, #004085);
+  }
+
+  .btn-outline-primary,
+  .btn-outline-secondary,
+  .btn-outline-dark {
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .btn-outline-primary:hover,
+  .btn-outline-secondary:hover,
+  .btn-outline-dark:hover {
+    opacity: 0.8;
+  }
+
+  .alert-danger {
+    border-radius: 8px;
+  }
+
+  .text-center a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .text-center a:hover {
+    text-decoration: underline;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="login-container">
+  <div class="card login-card">
+
+    <div class="login-header">
+      <h4>🔐 Login to SPIS</h4>
+    </div>
+
+    <div class="login-body">
+
+      {% if form.errors %}
+      <div class="alert alert-danger">
+        Invalid login credentials.
+      </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          <input type="text" name="username" class="form-control" placeholder="Enter your username" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2 mt-2">Login</button>
+      </form>
+
+      <div class="mt-4 d-grid gap-2">
+
+        <a href="{% url 'signup' %}" class="btn btn-outline-primary w-100 py-2">
+          🧑‍🎓 Sign up for Students
+        </a>
+
+        <a href="{% url 'proctor_signup' %}" class="btn btn-outline-secondary w-100 py-2">
+          👨‍🏫 Sign up for Proctors
+        </a>
+
+        <a href="{% url 'management_signup' %}" class="btn btn-outline-dark w-100 py-2">
+          🏢 Sign up for Management / HOD
+        </a>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

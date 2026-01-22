@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div class="container text-center mt-4">
+  <h2>Update Marks for {{ student.user.username }} ({{ student.usn }})</h2>
+
+  <h4 class="mt-3">Select Semester</h4>
+
+  <div class="mt-4">
+    {% for sem in "12345678" %}
+      <a href="{% url 'proctor_enter_marks' student.usn sem|add:'' %}"
+         class="btn btn-primary m-2" style="width:100px;">
+         Sem {{ sem }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <a href="{% url 'proctor_dashboard' %}" class="btn btn-secondary mt-4">Back</a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <h2>Student Dashboard – Viewed by Proctor</h2>
+
+  <p><strong>Name:</strong> {{ student.user.username }}</p>
+  <p><strong>USN:</strong> {{ student.usn }}</p>
+  <p><strong>Branch:</strong> {{ student.branch }}</p>
+
+  <hr>
+
+  <!-- Semester Dropdown -->
+  <form method="GET">
+    <label><strong>Select Semester:</strong></label>
+    <select name="sem" class="form-select w-auto d-inline-block" onchange="this.form.submit()">
+      {% for s in semesters %}
+        <option value="{{ s }}" {% if selected_sem == s %}selected{% endif %}>
+          Semester {{ s }}
+        </option>
+      {% endfor %}
+    </select>
+  </form>
+
+  <!-- MARKS TABLE -->
+  <h3 class="mt-3">📚 Semester {{ selected_sem }} – Marks & Attendance</h3>
+
+  <table class="table table-bordered table-striped shadow-sm mt-3">
+    <thead class="table-dark text-center">
+      <tr>
+        <th>Subject</th>
+        <th>Code</th>
+        <th>Internal 1</th>
+        <th>Internal 2</th>
+        <th>Total Internal</th>
+        <th>External</th>
+        <th>Total Marks</th>
+        <th>Attendance %</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for m in marks %}
+        <tr class="text-center">
+          <td>{{ m.subject }}</td>
+          <td>{{ m.subject_code }}</td>
+          <td>{{ m.internal1 }}</td>
+          <td>{{ m.internal2 }}</td>
+          <td>{{ m.total_internal }}</td>
+          <td>{{ m.external }}</td>
+          <td>{{ m.total_marks }}</td>
+          <td>{{ m.attendance_percentage }}%</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="8" class="text-center py-3 text-muted">No records available.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- PERFORMANCE GRAPH -->
+  <h4 class="mt-4">📊 Performance Analysis (Semester {{ selected_sem }})</h4>
+  <canvas id="studentPerformanceChart" height="120"></canvas>
+
+  <!-- Pass JSON to JS -->
+  <script>
+    window.performanceData = JSON.parse('{{ performance_data_json|escapejs }}');
+</script>
+
+
+  <!-- Chart JS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="{% static 'js/performance_chart.js' %}" type="module"></script>
+
+  <!-- Broadcasts -->
+  <h5 class="mt-4">📢 HOD Broadcast Messages</h5>
+
+  {% for b in broadcasts %}
+    <div class="alert alert-info">
+      <strong>{{ b.sender.username }}</strong><br>
+      {{ b.content }}<br>
+      <small class="text-muted">{{ b.timestamp }}</small>
+    </div>
+  {% empty %}
+    <p class="text-muted">No messages.</p>
+  {% endfor %}
+
+  <div class="text-center mt-4">
+    <a href="{% url 'proctor_dashboard' %}" class="btn btn-outline-dark">⬅ Back</a>
+  </div>
+
+</div>
+{% endblock %}

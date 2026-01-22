@@ -1,0 +1,10 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Update Profile</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn btn-primary" type="submit">Update</button>
+  <a class="btn btn-secondary" href="{% url 'student_dashboard' %}">Cancel</a>
+</form>
+{% endblock %}

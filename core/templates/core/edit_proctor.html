@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow p-4">
+    <h2 class="text-center">✏️ Edit Proctor</h2>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <label class="form-label">Username</label>
+      <input type="text" class="form-control" value="{{ proctor.user.username }}" disabled>
+
+      <label class="form-label mt-3">Email</label>
+      <input type="email" class="form-control" value="{{ proctor.user.email }}" disabled>
+
+      <label class="form-label mt-3">Department</label>
+      <input type="text" name="department" class="form-control"
+             value="{{ proctor.department }}">
+
+      <button class="btn btn-primary mt-4">Save Changes</button>
+
+      <a href="{% url 'manage_proctors' %}" class="btn btn-secondary mt-4">Cancel</a>
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

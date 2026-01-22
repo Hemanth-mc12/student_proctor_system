@@ -1,0 +1,95 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 900px;">
+
+  <div class="card shadow-lg border-0">
+    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">📚 Update Marks Record</h4>
+      <a href="{% url 'student_dashboard' %}" class="btn btn-light btn-sm">⬅ Back</a>
+    </div>
+
+    <div class="card-body">
+
+      <!-- ✅ Display success or error messages -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ formset.management_form }}
+
+        {% if formset.non_form_errors %}
+          <div class="alert alert-danger">
+            {{ formset.non_form_errors }}
+          </div>
+        {% endif %}
+
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Subject</th>
+              <th>Internal 1</th>
+              <th>Internal 2</th>
+              <th>External</th>
+              <th>Total</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for form in formset %}
+              <tr>
+                <td>{{ form.subject }}</td>
+                <td>{{ form.internal1 }}</td>
+                <td>{{ form.internal2 }}</td>
+                <td>{{ form.external }}</td>
+
+                <!-- ✅ Compute totals safely -->
+                <td>
+                  {% with total=form.instance.internal1|add:form.instance.internal2|add:form.instance.external %}
+                    {{ total|default:"—" }}
+                  {% endwith %}
+                </td>
+                <td>
+                  {% with total=form.instance.internal1|add:form.instance.internal2|add:form.instance.external %}
+                    {% if total %}
+                      {{ total }}%
+                    {% else %}
+                      —
+                    {% endif %}
+                  {% endwith %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between mt-3">
+          <a href="{% url 'student_dashboard' %}" class="btn btn-secondary">⬅ Cancel</a>
+          <button type="submit" class="btn btn-success">💾 Save Marks</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .table input {
+    width: 100%;
+    text-align: center;
+  }
+  .card {
+    border-radius: 12px;
+  }
+  .table th, .table td {
+    text-align: center;
+  }
+</style>
+{% endblock %}

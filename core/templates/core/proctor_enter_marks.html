@@ -1,0 +1,78 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+
+  <h2>Marks Entry – {{ student.user.username }} ({{ student.usn }}) – Semester {{ semester }}</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+
+    <table class="table table-bordered">
+      <thead class="table-dark text-center">
+        <tr>
+          <th>Subject</th>
+          <th>Code</th>
+          <th>Internal 1</th>
+          <th>Internal 2</th>
+          <th>Total Internal</th>
+          <th>External</th>
+          <th>Total Marks</th>
+          <th>Attendance %</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for m in marks %}
+        <tr>
+          <td><input class="form-control" type="text" name="subject_{{ m.id }}" value="{{ m.subject }}"></td>
+          <td><input class="form-control" type="text" name="subject_code_{{ m.id }}" value="{{ m.subject_code }}"></td>
+
+          <td><input class="form-control" type="number" name="internal1_{{ m.id }}" value="{{ m.internal1 }}"></td>
+          <td><input class="form-control" type="number" name="internal2_{{ m.id }}" value="{{ m.internal2 }}"></td>
+
+          <td><input class="form-control" type="number" name="total_internal_{{ m.id }}" value="{{ m.total_internal }}"></td>
+
+          <td><input class="form-control" type="number" name="external_{{ m.id }}" value="{{ m.external }}"></td>
+
+          <td><input class="form-control" type="number" name="total_marks_{{ m.id }}" value="{{ m.total_marks }}"></td>
+
+          <!-- FIXED: attendance_percentage -->
+          <td>
+            <input class="form-control" type="number" step="0.01"
+              name="attendance_percentage_{{ m.id }}"
+              value="{{ m.attendance_percentage }}">
+          </td>
+        </tr>
+        {% endfor %}
+
+        <!-- NEW SUBJECT ROW -->
+        <tr class="table-info">
+          <td><input class="form-control" type="text" name="new_subject" placeholder="New Subject"></td>
+          <td><input class="form-control" type="text" name="new_subject_code" placeholder="Subject Code"></td>
+
+          <td><input class="form-control" type="number" name="new_internal1"></td>
+          <td><input class="form-control" type="number" name="new_internal2"></td>
+
+          <td><input class="form-control" type="number" name="new_total_internal"></td>
+          <td><input class="form-control" type="number" name="new_external"></td>
+
+          <td><input class="form-control" type="number" name="new_total_marks"></td>
+
+          <!-- FIXED: attendance_percentage -->
+          <td>
+            <input class="form-control" type="number" step="0.01"
+              name="new_attendance_percentage" placeholder="%">
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <button class="btn btn-success">Save Marks</button>
+    <a href="{% url 'proctor_dashboard' %}" class="btn btn-secondary">Back</a>
+  </form>
+
+</div>
+
+{% endblock %}

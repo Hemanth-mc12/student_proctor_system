@@ -1,0 +1,129 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-4">
+
+  <h2 class="text-center mb-4">🏢 HOD Dashboard</h2>
+
+  <!-- ==================== HOD INFORMATION BOX ==================== -->
+  <div class="alert alert-info shadow-sm text-center mb-4">
+    <h4 class="mb-1">
+      👨‍💼 <strong>{{ hod_profile.user.username }}</strong>
+    </h4>
+
+    <p class="mb-0">
+      🏫 <strong>Department:</strong> {{ hod_profile.department }} <br>
+      📧 <strong>Email:</strong> {{ hod_profile.user.email }}
+    </p>
+  </div>
+
+  <!-- ==================== PROCTOR LIST ==================== -->
+  <div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">👨‍🏫 All Proctors ({{ hod_profile.department }})</h4>
+    </div>
+
+    <div class="card-body">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Proctor Name</th>
+            <th>Department</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for p in proctors %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ p.user.username }}</td>
+            <td>{{ p.department }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== STUDENT LIST ==================== -->
+  <div class="card shadow">
+    <div class="card-header bg-success text-white">
+      <h4>🧑‍🎓 All Students ({{ hod_profile.department }})</h4>
+    </div>
+
+    <div class="card-body">
+
+      <form method="POST" action="{% url 'assign_multiple' %}">
+        {% csrf_token %}
+
+        <table class="table table-bordered table-striped">
+          <thead class="table-dark">
+            <tr>
+              <th>Select</th>
+              <th>USN</th>
+              <th>Name</th>
+              <th>Branch</th>
+              <th>Semester</th>
+              <th>Assigned Proctor</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for s in students %}
+            <tr>
+              <td><input type="checkbox" name="students" value="{{ s.id }}"></td>
+              <td>{{ s.usn }}</td>
+              <td>{{ s.user.username }}</td>
+              <td>{{ s.branch }}</td>
+              <td>{{ s.semester }}</td>
+
+              <td>
+                {% if s.proctor %}
+                  {{ s.proctor.username }}
+                {% else %}
+                  <span class="text-danger">None</span>
+                {% endif %}
+              </td>
+
+              <!-- ================= ACTION BUTTONS (UPDATED) ================= -->
+              <td>
+                <!-- View Student Dashboard -->
+                <a href="{% url 'proctor_view_student_dashboard' s.usn %}"
+                   class="btn btn-sm btn-info text-white">
+                   👀 Dashboard
+                </a>
+
+                <!-- View Full History -->
+                <a href="{% url 'student_history' s.usn %}"
+                   class="btn btn-sm btn-secondary mt-1">
+                   🕓 History
+                </a>
+              </td>
+
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <!-- PROCTOR DROPDOWN -->
+        <label class="form-label mt-2"><b>Assign Proctor:</b></label>
+        <select name="proctor_id" class="form-select mb-3" required>
+          <option value="">-- Choose Proctor --</option>
+
+          {% for p in proctors %}
+            <option value="{{ p.user.id }}">{{ p.user.username }} ({{ p.department }})</option>
+          {% endfor %}
+        </select>
+
+        <button class="btn btn-success w-100">Assign Selected Students</button>
+      </form>
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

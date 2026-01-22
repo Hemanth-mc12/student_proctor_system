@@ -1,0 +1,64 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 900px;">
+  
+  <div class="card shadow-lg border-0">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">📅 Update Attendance Records</h4>
+    </div>
+    <div class="card-body">
+      
+      <!-- ✅ Show success or error messages -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ formset.management_form }}
+
+        <table class="table table-bordered align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Subject</th>
+              <th>Total Classes</th>
+              <th>Attended Classes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for form in formset %}
+              <tr>
+                {% for field in form.visible_fields %}
+                  <td>{{ field }}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between mt-3">
+          <a href="{% url 'student_dashboard' %}" class="btn btn-secondary">⬅ Back</a>
+          <button type="submit" class="btn btn-success">💾 Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .table input {
+    width: 100%;
+    text-align: center;
+  }
+  .card {
+    border-radius: 12px;
+  }
+</style>
+{% endblock %}

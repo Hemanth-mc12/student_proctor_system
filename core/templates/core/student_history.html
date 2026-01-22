@@ -1,0 +1,149 @@
+{% extends 'core/base.html' %}
+{% load custom_tags %}
+{% block content %}
+
+<style>
+  /* === STUDENT HISTORY PAGE CSS === */
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .profile-container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  .profile-header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 25px 30px;
+  }
+
+  .profile-header h2 {
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+
+  .profile-header small {
+    opacity: 0.8;
+  }
+
+  .profile-body {
+    padding: 25px 30px;
+  }
+
+  .info-section {
+    margin-bottom: 20px;
+  }
+
+  .info-section h5 {
+    color: #0056b3;
+    font-weight: 600;
+    border-bottom: 2px solid #e3e3e3;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+  }
+
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed #e9ecef;
+  }
+
+  .info-item strong {
+    color: #333;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="profile-container">
+  <div class="profile-header">
+    <h2>{{ student.user.get_full_name|default:student.user.username }}</h2>
+    <small><strong>USN:</strong> {{ student.usn }}</small><br>
+    <small><strong>Today:</strong> {{ today|date:"Y-m-d" }}</small>
+  </div>
+
+  <div class="profile-body">
+
+    <!-- Academic Info -->
+    <div class="info-section">
+      <h5>🎓 Academic Details</h5>
+
+      <div class="info-item"><strong>Branch:</strong> <span>{{ student.branch }}</span></div>
+      <div class="info-item"><strong>Semester:</strong> <span>{{ student.semester }}</span></div>
+      <div class="info-item"><strong>Section:</strong> <span>{{ student.section|default:"-" }}</span></div>
+
+      <div class="info-item">
+        <strong>Proctor:</strong>
+        <span>
+          {% if student.proctor %}
+              {{ student.proctor.get_full_name|default:student.proctor.username }}
+          {% else %}
+              Not Assigned
+          {% endif %}
+        </span>
+      </div>
+    </div>
+
+    <!-- Personal Info -->
+    <div class="info-section">
+      <h5>👤 Personal Details</h5>
+      <div class="info-item"><strong>Date of Birth:</strong> <span>{{ student.dob|date:"Y-m-d" }}</span></div>
+      <div class="info-item"><strong>Blood Group:</strong> <span>{{ student.blood_group|default:"-" }}</span></div>
+      <div class="info-item"><strong>Phone:</strong> <span>{{ student.phone|default:"-" }}</span></div>
+      <div class="info-item"><strong>Email:</strong> <span>{{ student.user.email }}</span></div>
+    </div>
+
+    <!-- Family Info -->
+    <div class="info-section">
+      <h5>🏠 Family Information</h5>
+      <div class="info-item"><strong>Father Name:</strong> <span>{{ student.father_name|default:"-" }}</span></div>
+      <div class="info-item"><strong>Father Phone:</strong> <span>{{ student.father_phone|default:"-" }}</span></div>
+      <div class="info-item"><strong>Mother Name:</strong> <span>{{ student.mother_name|default:"-" }}</span></div>
+      <div class="info-item"><strong>Mother Phone:</strong> <span>{{ student.mother_phone|default:"-" }}</span></div>
+    </div>
+
+    <!-- Address Info -->
+    <div class="info-section">
+      <h5>📍 Address</h5>
+      <div class="info-item"><strong>Permanent Address:</strong> <span>{{ student.permanent_address|default:"-" }}</span></div>
+      <div class="info-item"><strong>Local Address:</strong> <span>{{ student.local_address|default:"-" }}</span></div>
+    </div>
+
+    <!-- Fee Info -->
+    <div class="info-section">
+      <h5>💰 Fee Details</h5>
+      <div class="info-item"><strong>First Year Fee:</strong> <span>₹{{ student.first_year_fee|default:"0.00" }}</span></div>
+      <div class="info-item"><strong>Second Year Fee:</strong> <span>₹{{ student.second_year_fee|default:"0.00" }}</span></div>
+      <div class="info-item"><strong>Third Year Fee:</strong> <span>₹{{ student.third_year_fee|default:"0.00" }}</span></div>
+      <div class="info-item"><strong>Fourth Year Fee:</strong> <span>₹{{ student.fourth_year_fee|default:"0.00" }}</span></div>
+    </div>
+
+    <!-- ✅ Dynamic Back Button -->
+    <div class="text-center mt-4">
+      {% if user|has_attr:"studentprofile" %}
+        <a href="{% url 'student_dashboard' %}" class="btn btn-outline-primary px-4">⬅ Back to Student Dashboard</a>
+
+      {% elif user|has_attr:"proctorprofile" %}
+        <a href="{% url 'proctor_dashboard' %}" class="btn btn-outline-primary px-4">⬅ Back to Proctor Dashboard</a>
+
+      {% elif user|has_group:"HOD" %}
+        <a href="{% url 'hod_dashboard' %}" class="btn btn-outline-primary px-4">⬅ Back to HOD Dashboard</a>
+
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow p-4">
+    <h2 class="text-center">🧑‍🎓 Students List</h2>
+
+    <table class="table table-bordered table-striped mt-3">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>USN</th>
+          <th>Branch</th>
+          <th>Semester</th>
+          <th>Proctor</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for s in students %}
+        <tr>
+          <td>{{ s.id }}</td>
+          <td>{{ s.user.username }}</td>
+          <td>{{ s.usn }}</td>
+          <td>{{ s.branch }}</td>
+          <td>{{ s.semester }}</td>
+
+          <td>
+            {% if s.proctor %}
+              {{ s.proctor.username }}
+            {% else %}
+              <span class="text-danger">Not Assigned</span>
+            {% endif %}
+          </td>
+
+          <td>
+            
+            <a href="{% url 'delete_student' s.id %}" class="btn btn-danger btn-sm"
+               onclick="return confirm('Are you sure?')">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+{% endblock %}

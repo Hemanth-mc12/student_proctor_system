@@ -1,0 +1,138 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<style>
+  /* === PROCTOR SIGNUP PAGE CSS === */
+  body {
+    background: linear-gradient(135deg, #e3f2fd, #f8f9fa);
+    min-height: 100vh;
+  }
+
+  .signup-container {
+    max-width: 550px;
+    margin: 60px auto;
+    animation: fadeIn 0.8s ease-in-out;
+  }
+
+  .signup-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+
+  .signup-header {
+    background: linear-gradient(135deg, #0d6efd, #004aad);
+    color: white;
+    text-align: center;
+    padding: 25px;
+  }
+
+  .signup-header h4 {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .signup-body {
+    background-color: #ffffff;
+    padding: 30px;
+  }
+
+  .form-label {
+    font-weight: 500;
+    margin-top: 10px;
+  }
+
+  .form-control {
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    transition: 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #0069d9, #004085);
+  }
+
+  .alert {
+    border-radius: 10px;
+  }
+
+  .text-center a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .text-center a:hover {
+    text-decoration: underline;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="signup-container">
+  <div class="card signup-card">
+    <div class="signup-header">
+      <h4>👨‍🏫 Proctor Sign-Up</h4>
+      <p class="mb-0">Create your proctor account to manage students</p>
+    </div>
+
+    <div class="signup-body">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="id_username" class="form-label">Username</label>
+          <input type="text" name="username" id="id_username" class="form-control" placeholder="Enter your username" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="id_email" class="form-label">Email</label>
+          <input type="email" name="email" id="id_email" class="form-control" placeholder="Enter your email" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="id_password" class="form-label">Password</label>
+          <input type="password" name="password" id="id_password" class="form-control" placeholder="Enter a strong password" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="id_department" class="form-label">Department</label>
+          <input type="text" name="department" id="id_department" class="form-control" placeholder="Enter your department (e.g., CSE, ECE)" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2 mt-3">Create Proctor Account</button>
+      </form>
+
+      <div class="text-center mt-4">
+        <p>Already have an account?</p>
+        <a href="{% url 'login' %}" class="btn btn-outline-primary w-100 py-2">🔐 Login Here</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

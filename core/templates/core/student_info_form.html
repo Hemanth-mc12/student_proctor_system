@@ -1,0 +1,231 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  /* Full-page premium gradient background */
+  body {
+    background: linear-gradient(
+      120deg,
+      #dbeafe,
+      #e0f2fe,
+      #ffe4e6,
+      #f3e8ff
+    );
+    background-size: 300% 300%;
+    animation: bgAnimation 12s ease infinite;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* Smooth background animation */
+  @keyframes bgAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .update-card {
+    max-width: 1000px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    border: 2px solid #e2e8f0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Neon animated glow around the card */
+  .update-card::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 18px;
+    padding: 2px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc, #00c6ff);
+    z-index: -1;
+    animation: glowMove 6s linear infinite;
+  }
+
+  @keyframes glowMove {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+
+  .update-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1e3a8a;
+    text-align: center;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+  }
+
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-top: 30px;
+    margin-bottom: 12px;
+    position: relative;
+    padding-left: 12px;
+  }
+
+  .section-title::before {
+    content: "";
+    width: 6px;
+    height: 24px;
+    background: linear-gradient(180deg, #007bff, #00d4ff);
+    position: absolute;
+    left: 0;
+    top: 4px;
+    border-radius: 4px;
+  }
+
+  .form-control,
+  .form-select,
+  textarea {
+    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    transition: all .25s ease;
+  }
+
+  .form-control:focus,
+  .form-select:focus,
+  textarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 8px rgba(59,130,246,.4);
+    background: #ffffff;
+  }
+
+  textarea {
+    min-height: 80px;
+  }
+
+  .btn-primary {
+    border-radius: 10px;
+    padding: 10px 30px;
+    font-size: 17px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border: none;
+    color: white;
+    font-weight: 600;
+    transition: .2s;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline-secondary {
+    border-radius: 10px;
+    padding: 10px 30px;
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px 30px;
+  }
+
+  @media (max-width: 768px) {
+    .two-col {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="update-card">
+
+  <h2 class="update-title">📝 Update Student Details — {{ student.usn }}</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="POST">
+    {% csrf_token %}
+
+    <!-- 🎓 Academic Section -->
+    <div class="section-title">🎓 Academic Information</div>
+
+    <div class="two-col">
+      <div>
+        <label>Branch</label>
+        {{ form.branch }}
+      </div>
+      <div>
+        <label>Semester</label>
+        {{ form.semester }}
+      </div>
+      <div>
+        <label>Section</label>
+        {{ form.section }}
+      </div>
+      <div>
+        <label>Assigned Proctor</label>
+        {{ form.proctor }}
+      </div>
+    </div>
+
+    <!-- 👤 Personal Section -->
+    <div class="section-title">👤 Personal Information</div>
+
+    <div class="two-col">
+      <div><label>Date of Birth</label>{{ form.dob }}</div>
+      <div><label>Blood Group</label>{{ form.blood_group }}</div>
+      <div><label>Phone Number</label>{{ form.phone }}</div>
+      <div><label>Email</label>{{ form.email }}</div>
+    </div>
+
+    <!-- 🏠 Family Section -->
+    <div class="section-title">🏠 Family Information</div>
+
+    <div class="two-col">
+      <div><label>Father Name</label>{{ form.father_name }}</div>
+      <div><label>Father Phone</label>{{ form.father_phone }}</div>
+      <div><label>Mother Name</label>{{ form.mother_name }}</div>
+      <div><label>Mother Phone</label>{{ form.mother_phone }}</div>
+    </div>
+
+    <!-- 📍 Address Section -->
+    <div class="section-title">📍 Address Details</div>
+
+    <label>Permanent Address</label>
+    {{ form.permanent_address }}
+
+    <br><br>
+
+    <label>Local Address</label>
+    {{ form.local_address }}
+
+    <!-- 💰 Fee Section -->
+    <div class="section-title">💰 Fee Details</div>
+
+    <div class="two-col">
+      <div><label>1st Year Fee</label>{{ form.first_year_fee }}</div>
+      <div><label>2nd Year Fee</label>{{ form.second_year_fee }}</div>
+      <div><label>3rd Year Fee</label>{{ form.third_year_fee }}</div>
+      <div><label>4th Year Fee</label>{{ form.fourth_year_fee }}</div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="d-flex justify-content-between mt-4">
+      <a href="{% url 'student_history' student.usn %}" class="btn btn-outline-secondary px-4">⬅ Back</a>
+      <button type="submit" class="btn btn-primary px-4">💾 Save Changes</button>
+    </div>
+
+  </form>
+
+</div>
+
+{% endblock %}

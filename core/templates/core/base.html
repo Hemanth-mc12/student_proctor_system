@@ -1,0 +1,129 @@
+{% load static %}
+{% load custom_tags %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SPIS | Student–Proctor Interaction System</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .navbar-brand { font-weight: bold; color: #0d6efd !important; }
+    .nav-link { color: #333 !important; }
+    .nav-link:hover { color: #0d6efd !important; }
+    footer { background: #fff; border-top: 1px solid #e5e5e5; color: #6c757d; }
+  </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+  <div class="container-fluid px-4">
+
+    <a class="navbar-brand" href="{% url 'index' %}">SPIS</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+
+        {% if user.is_authenticated %}
+
+          <!-- ================= STUDENT ================= -->
+          {% if user|has_attr:"studentprofile" %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'student_dashboard' %}">🏠 Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'student_history' user.studentprofile.usn %}">📘 My Profile</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'student_meetings' %}">📅 My Meetings</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'student_info_upload' user.studentprofile.usn %}">✏️ Update Info</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'direct_messages' %}">💬 Chat</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'student_broadcasts' %}">📢 Broadcast Messages</a></li>
+
+
+          <!-- ================= HOD (checked BEFORE proctor) ================= -->
+          {% elif user|has_group:"HOD" %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'hod_dashboard' %}">🏢 HOD Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'manage_proctors' %}">👨‍🏫 Manage Proctors</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'manage_students' %}">🧑‍🎓 Manage Students</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'hod_broadcast' %}">📢 Broadcast Message</a></li>
+
+
+          <!-- ================= PROCTOR ================= -->
+         {% elif user|has_attr:"proctorprofile" %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'proctor_dashboard' %}">🏠 Dashboard</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'meeting_schedule' %}">📅 Schedule Meeting</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'direct_messages' %}">💬 Conversations</a>
+    </li>
+
+    <!-- ✅ FIX: Proctor should ONLY VIEW broadcast messages, not create -->
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'student_broadcasts' %}">📢 Broadcast Messages</a>
+    </li>
+
+
+          <!-- ================= SUPERUSER / ADMIN ================= -->
+          {% elif user.is_superuser %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">🏠 Admin Home</a></li>
+
+          {% endif %}
+
+          <!-- COMMON HELP -->
+          <li class="nav-item"><a class="nav-link" href="{% url 'help' %}">🆘 Help</a></li>
+
+          <!-- LOGOUT -->
+          <li class="nav-item">
+            <a class="nav-link text-danger" href="{% url 'logout' %}">
+              🚪 Logout ({{ user.username }})
+            </a>
+          </li>
+
+        {% else %}
+          <!-- GUEST NAVIGATION -->
+          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">🔐 Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">👨‍🎓 Student Signup</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'proctor_signup' %}">👨‍🏫 Proctor Signup</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'management_signup' %}">🏢 HOD Signup</a></li>
+
+        {% endif %}
+
+      </ul>
+    </div>
+
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="container mt-4 mb-5">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</div>
+
+<footer class="text-center py-3">
+  © {{ year|default:2025 }} <strong>SPIS</strong> — Student–Proctor Interaction System
+</footer>
+
+</body>
+</html>
